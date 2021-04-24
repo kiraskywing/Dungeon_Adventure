@@ -246,8 +246,12 @@ void Dungeon::chooseAction() {
     if (obj) {
         string objName = obj->getName();
         if (obj->triggerEvent(&player)) {
-            if (mon && objName != "Boss") currentMonsterNumber--;
-            if (itm)                      currentChestNumber--;
+            if (mon && objName != "Boss") 
+                currentMonsterNumber--;
+            if (player.checkIsDead()) 
+                return;
+            if (itm)                      
+                currentChestNumber--;
             
             curRM->popObject();
             obj = nullptr;
