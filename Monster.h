@@ -10,9 +10,10 @@
 
 using namespace std;
 
+int randomInt(const int, const int);
+bool oddFunction(int);
+
 class Monster: public GameCharacter {
-private:
-    random_device rd;
 public:
     Monster(string name="", int maxHp=100, int curHp=100, int atk=100, int mny=100, int car=10)
         :GameCharacter(name, "Monster", maxHp, curHp, atk, mny, car) {}
@@ -23,7 +24,6 @@ public:
     /* the combat system.                           */
     virtual bool triggerEvent(Object*) override;
     
-    bool oddFunction(int);
     void attackFunction(GameCharacter*, GameCharacter*);
     bool retreatFunction(Player*, Monster*);
 };

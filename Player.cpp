@@ -1,7 +1,5 @@
 #include "Player.h"
 
-using namespace std;
-
 Player::Player(string name, int hp, int atk, int addAtk, int wpAtk, int mny, int car,  int lv)
     : GameCharacter(name, "Player", hp, hp, atk + addAtk + wpAtk, mny, car) {
            currentRoom = previousRoom = nullptr;
@@ -18,23 +16,22 @@ bool Player::updateStatus(int hp, int addAtk, int mny, int car) {
         }
         hp = (hp + pre_hp >= max_hp ? max_hp :hp + pre_hp);
         setCurrentHealth(hp);
-        cout << "Your health is increased to " << hp << endl;
+        cout << "Your current health: " << hp << endl;
     }
     if (addAtk) {
         addedAttack += addAtk;
         addAtk += getAttack();
         setAttack(addAtk);
-        cout << "Your attack is increased to " << addAtk << endl;
+        cout << "Your current attack: " << addAtk << endl;
     }
     if (mny) {
-        cout << "Your money is " << (mny > 0 ? "increased" : "decreased") << " to ";
+        cout << "You " << (mny > 0 ? "received" : "spent") << " $" << mny << endl;
         mny += getMoney();
         setMoney(mny);
-        cout << mny << endl;
     }
     if (car) {
         setCriticalAttackRate(car);
-        cout << "Your crtical attack rate is increased to " << car << '%' << endl;
+        cout << "Your crtical attack rate is set to " << car << '%' << endl;
     }
     return true;
 }
@@ -50,7 +47,7 @@ bool Player::triggerEvent(Object* obj) {
     cout << "=> Health: " << getCurrentHealth() << "/" << getMaxHealth() << endl;
     cout << "=> Attack: " << getAttack() << endl;
     cout << "=> Critical attack rate: " << getCriticalAttackRate() << '%' << endl;
-    cout << "=> Money: " << getMoney() << endl;
+    cout << "=> Money: $" << getMoney() << endl;
     cout << "=> Weapon: " << weaponName << endl;
     cout << "=> Number of posions: " << inventory.size() << endl;
     return true;

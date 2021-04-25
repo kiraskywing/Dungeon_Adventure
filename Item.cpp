@@ -1,7 +1,5 @@
 #include "Item.h"
 
-using namespace std;
-
 bool Item::triggerEvent(Object *obj) {
     Player* p = dynamic_cast<Player*>(obj);
     string itmName = getName();

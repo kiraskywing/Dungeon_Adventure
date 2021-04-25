@@ -1,7 +1,5 @@
 #include "NPC.h"
 
-using namespace std;
-
 bool NPC::triggerEvent(Object* obj) {
     Player* p = dynamic_cast<Player*>(obj);
     cout << endl << "Welcome to " << getName() << ", please choose action\n"
@@ -83,4 +81,3 @@ bool NPC::triggerEvent(Object* obj) {
 
     return false;
 }
-

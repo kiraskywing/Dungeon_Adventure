@@ -7,7 +7,6 @@
 #include <string>
 #include <vector>
 #include <cctype>
-#include <random>
 #include <fstream>
 #include <sstream>
 #include "Player.h"
@@ -22,13 +21,10 @@ class Dungeon {
 private:
     Player player;
     vector<Room> rooms;
-    
     int map_row, map_col;
     int maxMonsterNumber, maxChestNumber;
     int currentMonsterNumber, currentChestNumber;
     Room *boss_room;
-    
-    random_device rd;
 public:
     Dungeon() { 
         map_row = 4; map_col = 5; 
@@ -37,9 +33,7 @@ public:
     }
     ~Dungeon() {}
 
-    int randomInt(const int, const int);
     int getRandomRoomNumber();
-    int inputFilter(const int);
     
     /* Create a new player, and give him/her basic status */
     void createPlayer();

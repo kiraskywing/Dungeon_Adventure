@@ -1,13 +1,5 @@
 #include "Dungeon.h"
 
-using namespace std;
-
-int Dungeon::randomInt(const int start, const int end) {
-    default_random_engine generator(rd());
-    uniform_int_distribution<int> distribution(start, end);
-    return distribution(generator);
-}
-
 int Dungeon::getRandomRoomNumber() {
     int idx;
     Room* curRM = player.getCurrentRoom();
@@ -18,22 +10,9 @@ int Dungeon::getRandomRoomNumber() {
     return idx;
 }
 
-int Dungeon::inputFilter(const int n) {
-    int i;
-    char c;
-    do {
-        cin >> c;
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-        i = tolower(c) - 'a';
-        if (i < 0 || i >= n) cout << "Wrong input. Please enter again: ";
-    } while (i < 0 || i >= n);
-    return i;
-}
-
 void Dungeon::createPlayer() {
     string s_name;
-    cout << "Please enter player's name: ";
+    cout << "Please enter player's name (without white space): ";
     cin >> s_name;
     cin.clear();
     cin.ignore(INT_MAX, '\n');
@@ -140,31 +119,39 @@ void Dungeon::createChest(const int n) {
 }
 
 void Dungeon::handleMovement() {
-    showMap();
-    
     cout << endl << "Where do you want to go?" << endl;
-    vector<string> moves;
+    vector<string> moves = {"Move Up", "Move Down", "Move Left", "Move Right"};
     
     Room* curRM = player.getCurrentRoom();
-    if (curRM->getUpRoom())    {moves.push_back("Move Up");}
-    if (curRM->getDownRoom())  {moves.push_back("Move Down");}
-    if (curRM->getLeftRoom())  {moves.push_back("Move Left");}
-    if (curRM->getRightRoom()) {moves.push_back("Move Right");}
     
     int i, n = moves.size();
     for (i = 0; i < n; i++)
         cout << "(" << (char)('a'+i) << ") " << moves[i] << endl;
     cout << "Please choose one direction: ";
 
-    i = inputFilter(n);
-    if (moves[i][5] == 'U') {player.changeRoom(curRM->getUpRoom()); }
-    if (moves[i][5] == 'D') {player.changeRoom(curRM->getDownRoom()); }
-    if (moves[i][5] == 'L') {player.changeRoom(curRM->getLeftRoom()); }
-    if (moves[i][5] == 'R') {player.changeRoom(curRM->getRightRoom()); }
+    while (true) {
+        i = inputFilter(n);
+        if (moves[i][5] == 'U' && curRM->getUpRoom()) {
+            player.changeRoom(curRM->getUpRoom()); 
+            break;
+        }
+        if (moves[i][5] == 'D' && curRM->getDownRoom()) {
+            player.changeRoom(curRM->getDownRoom());
+            break;
+        }
+        if (moves[i][5] == 'L' && curRM->getLeftRoom()) {
+            player.changeRoom(curRM->getLeftRoom()); 
+            break;
+        }
+        if (moves[i][5] == 'R' && curRM->getRightRoom()) {
+            player.changeRoom(curRM->getRightRoom());
+            break;
+        }
+        cout << "You can't go there. Please choose again: ";
+    }
     
     curRM = player.getCurrentRoom();
     curRM->setIsVisited(true);
-    showMap();
 }
 
 void Dungeon::showMap() {
@@ -231,6 +218,7 @@ void Dungeon::startGame() {
 
 void Dungeon::chooseAction() {
     // check items in current room and use handleEvent
+    Record rec;
     vector<string> actions = {"Move", "Check status", "Use inventory"};
     Monster* mon = nullptr;
     Item* itm = nullptr;
@@ -261,6 +249,7 @@ void Dungeon::chooseAction() {
                     createChest(maxChestNumber - currentChestNumber);
                 player.levelUp();
                 createMonster();
+                rec.saveToFile(this, player, rooms);
             }
         }
         else {
@@ -271,6 +260,8 @@ void Dungeon::chooseAction() {
     
     actions.push_back("Game options");
     
+    showMap();
+
     int i;
     cout << endl << "Choose one action: ";
     for (i = 0; i < actions.size(); i++)
@@ -284,7 +275,7 @@ void Dungeon::chooseAction() {
     if (actions[i][0] == 'U') { player.useInventory(); }
     if (actions[i][0] == 'G') {
         cout << endl << "Choose one action: "
-             << endl << "(a) Save to file"
+             << endl << "(a) Save game"
              << endl << "(b) Load game"
              << endl << "(c) Quit"
              << endl << "Enter: ";
@@ -292,7 +283,7 @@ void Dungeon::chooseAction() {
         i = inputFilter(3);
 
         if (i == 2) { cout << endl << "Goodbye!" << endl << endl; exit(1); }
-        Record rec;
+        
         if (i == 0) rec.saveToFile(this, player, rooms);
         if (i == 1) rec.loadFromFile(this, player, rooms);
     }

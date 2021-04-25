@@ -16,8 +16,6 @@ public:
         : Object(name, tag), maxHealth(maxHp), currentHealth(curHp), attack(atk), money(mny), criticalAttackRate(car) {}
     virtual ~GameCharacter() {}
     
-    int inputFilter(const int);
-    
     virtual bool triggerEvent(Object*) override { return true; }
     
     bool checkIsDead() { return currentHealth <= 0; }

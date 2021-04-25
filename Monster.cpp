@@ -1,5 +1,15 @@
 #include "Monster.h"
-using namespace std;
+
+random_device rd;
+default_random_engine generator(rd());
+
+int randomInt(const int start, const int end) {
+    uniform_int_distribution<int> distribution(start, end);
+    return distribution(generator);
+}
+bool oddFunction(int rate) {
+    return randomInt(1, 100) <= rate;
+}
 
 bool Monster::triggerEvent(Object* obj) {
     Player* p = dynamic_cast<Player*>(obj);
@@ -31,12 +41,6 @@ bool Monster::triggerEvent(Object* obj) {
     }
 
     return true;
-}
-
-bool Monster::oddFunction(int rate) {
-    default_random_engine generator(rd());
-    uniform_int_distribution<int> distribution(1, 100);
-    return distribution(generator) <= rate;
 }
 
 void Monster::attackFunction(GameCharacter* a, GameCharacter* b) {

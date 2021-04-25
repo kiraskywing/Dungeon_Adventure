@@ -24,4 +24,6 @@ public:
     string getTag() { return tag; }
 };
 
+int inputFilter(const int);
+
 #endif // OBJECT_H_INCLUDED
