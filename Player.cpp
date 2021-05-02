@@ -4,8 +4,10 @@ Player::Player(string name, int hp, int atk, int addAtk, int wpAtk, int mny, int
     : GameCharacter(name, "Player", hp, hp, atk + addAtk + wpAtk, mny, car) {
            currentRoom = previousRoom = nullptr;
            weaponName = "Sword_lv.0";
-           inventoryMaxSize = 6; addedAttack = addAtk; weaponAttack = wpAtk; level = lv;
+           backpackMaxSize = 6; addedAttack = addAtk; weaponAttack = wpAtk; level = lv;
+           backpack.reserve(backpackMaxSize);
         }  
+Player:: ~Player() { for (Item* itm : backpack) { delete itm; itm = nullptr; } }
 
 bool Player::updateStatus(int hp, int addAtk, int mny, int car) {
     if (hp) {
@@ -25,7 +27,7 @@ bool Player::updateStatus(int hp, int addAtk, int mny, int car) {
         cout << "Your current attack: " << addAtk << endl;
     }
     if (mny) {
-        cout << "You " << (mny > 0 ? "received" : "spent") << " $" << mny << endl;
+        cout << "You " << (mny > 0 ? "received" : "spent") << " $" << (mny > 0 ? mny : -mny) << endl;
         mny += getMoney();
         setMoney(mny);
     }
@@ -49,7 +51,7 @@ bool Player::triggerEvent(Object* obj) {
     cout << "=> Critical attack rate: " << getCriticalAttackRate() << '%' << endl;
     cout << "=> Money: $" << getMoney() << endl;
     cout << "=> Weapon: " << weaponName << endl;
-    cout << "=> Number of posions: " << inventory.size() << endl;
+    cout << "=> Number of potions: " << backpack.size() << endl;
     return true;
 }
 
@@ -67,24 +69,24 @@ void Player::levelUp() {
     triggerEvent(nullptr);
 }
 
-void Player::useInventory() {
+void Player::useBackpack() {
     while (true) {
-        if (inventory.empty()) {
+        if (backpack.empty()) {
             cout << endl << "No item." << endl;
             return;
         }
         
         cout << endl << "Choose one item: ";
         Item* itm;
-        int j, n = inventory.size();
+        int j, n = backpack.size();
         for (j = 0; j < n; j++) {
-            itm = dynamic_cast<Item*>(inventory[j]);
+            itm = backpack[j];
             cout << endl << "(" << (char)('a'+j) << ") " << itm->getName() 
                  << ": Recover " << itm->getHealth() << " Health";
         }
         cout << endl << "(" << (char)('a'+j) << ") " << "Back"
              << endl << "Enter: ";
-        int i = inputFilter(n + 1);
+        int i = inputOptimizer(n + 1);
         if (i == n) return;
 
         cout << endl << "Choose use, discard or go back: "
@@ -92,18 +94,18 @@ void Player::useInventory() {
              << endl << "(b) Discard"
              << endl << "(c) Back"
              << endl << "Enter: ";
-        j = inputFilter(3);
+        j = inputOptimizer(3);
         if (j == 2) return;
 
-        itm = dynamic_cast<Item*>(inventory[i]);
+        itm = backpack[i];
         if ((j == 0 && itm->triggerEvent(this)) || j == 1) {
-            delete inventory[i];
+            delete backpack[i];
             if (i != n - 1) {
                 for (int k = i; k < n - 1; k++)
-                    inventory[k] = inventory[k + 1];
+                    backpack[k] = backpack[k + 1];
             }
-            inventory[n - 1] = nullptr;
-            inventory.pop_back();
+            backpack.pop_back();
         }
+        inputOptimizer(0, "pause");
     }
 }

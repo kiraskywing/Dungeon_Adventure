@@ -24,6 +24,6 @@ public:
     string getTag() { return tag; }
 };
 
-int inputFilter(const int);
+int inputOptimizer(const int, string mode="");
 
 #endif // OBJECT_H_INCLUDED

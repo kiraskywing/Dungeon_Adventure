@@ -11,7 +11,7 @@
 using namespace std;
 
 int randomInt(const int, const int);
-bool oddFunction(int);
+bool oddFunction(const int);
 
 class Monster: public GameCharacter {
 public:

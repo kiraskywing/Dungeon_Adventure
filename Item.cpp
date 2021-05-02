@@ -17,7 +17,7 @@ bool Item::triggerEvent(Object *obj) {
         p->setAttack(preAtk - preWeaponAtk); 
         p->setAddedAttack(preAddAtk - preWeaponAtk);
     }
-    else if (itmName.find("Posion") != string::npos) 
+    else if (itmName.find("Potion") != string::npos) 
         cout << endl << "You choose to use " << itmName << endl;
     else 
         cout << endl << "You got " << itmName << endl;

@@ -6,32 +6,33 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
-#include <fstream>
-#include <sstream>
 #include "Player.h"
 #include "Item.h"
 #include "Monster.h"
 #include "NPC.h"
 #include "Room.h"
+#include "Record.h"
 
 using namespace std;
+
+class Record;
 
 class Dungeon {
 private:
     Player player;
-    vector<Room> rooms;
+    vector<Room*> rooms;
     int map_row, map_col;
     int maxMonsterNumber, maxChestNumber;
     int currentMonsterNumber, currentChestNumber;
     Room *boss_room;
 public:
     Dungeon() { 
-        map_row = 4; map_col = 5; 
-        currentMonsterNumber = maxMonsterNumber = 3;
-        currentChestNumber = maxChestNumber = 3;
+        map_row = 4; map_col = 5;
+        maxMonsterNumber = 3;
+        maxChestNumber = 3;
+        rooms.reserve(map_row * map_col);
     }
-    ~Dungeon() {}
+    ~Dungeon() { for (Room* rm : rooms) { delete rm; rm = nullptr; } }
 
     int getRandomRoomNumber();
     
@@ -43,7 +44,7 @@ public:
 
     void createNPC();
     void createMonster();
-    void createChest(int);
+    void createChest();
     
     /* Deal with player's moveing action */
     void handleMovement();
@@ -76,26 +77,6 @@ public:
     int getCurMonNumber() { return currentMonsterNumber; }
     int getCurChestNumber() { return currentChestNumber; }
     Room* getBossRoom() { return boss_room; }
-};
-
-class Record {
-private:
-    void saveDungoen(Dungeon*, ofstream&);
-    void savePlayer(Player&, ofstream&);
-    void saveRooms(vector<Room>&, ofstream&);
-    void saveMonster(Monster*, ofstream&);
-    void saveItem(Item*, ofstream&);
-    void saveNPC(NPC*, ofstream&);
-    void loadDungoen(Dungeon*, vector<Room>&, ifstream&);
-    void loadPlayer(Player&, vector<Room>&, ifstream&);
-    void loadRooms(vector<Room>&, ifstream&);
-    Monster* loadMonster(stringstream&, ifstream&);
-    Item* loadItem(stringstream&, ifstream&);
-    NPC* loadNPC(stringstream&, ifstream&);
-public:
-    Record() {}
-    void saveToFile(Dungeon*, Player&, vector<Room>&);
-    bool loadFromFile(Dungeon*, Player&, vector<Room>&);
 };
 
 #endif // DUNGEON_H_INCLUDED

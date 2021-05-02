@@ -9,6 +9,8 @@
 
 using namespace std;
 
+class player;
+
 class Item: public Object {
 private:
     int health, attack, money, criticalAttackRate;

@@ -11,10 +11,13 @@ using namespace std;
 
 class NPC: public GameCharacter {
 private:
-    vector<Object*> commodity;
+    vector<Item*> commodity;
 public:
-    NPC(string name="") : GameCharacter(name, "NPC") {}
-    virtual ~NPC() { for (Object* obj : commodity) { delete obj; obj = nullptr; } }
+    NPC(string name="") : GameCharacter(name, "NPC") { commodity.reserve(6); }
+    virtual ~NPC() { for (Item* obj : commodity) { delete obj; obj = nullptr; } }
+    
+    int chooseCommodity(Player*);
+    void buyCommodity(Player*, int);
     
     /* Virtual function that you need to complete   */
     /* In NPC, this function should deal with the   */
@@ -22,8 +25,8 @@ public:
     virtual bool triggerEvent(Object*) override;
 
     /* Set & Get function*/
-    void setCommodity(const vector<Object*>& itms) { commodity.insert(commodity.end(), itms.begin(), itms.end()); }
-    const vector<Object*>& getCommodity() { return commodity; }
+    void setCommodity(const vector<Item*>& itms) { commodity.insert(commodity.end(), itms.begin(), itms.end()); }
+    vector<Item*>& getCommodity() { return commodity; }
 };
 
 #endif // NPC_H_INCLUDED

@@ -16,9 +16,7 @@ public:
         : Object(name, tag), maxHealth(maxHp), currentHealth(curHp), attack(atk), money(mny), criticalAttackRate(car) {}
     virtual ~GameCharacter() {}
     
-    virtual bool triggerEvent(Object*) override { return true; }
-    
-    bool checkIsDead() { return currentHealth <= 0; }
+    bool checkIsDead() { return currentHealth == 0; }
     int takeDamage(int dmg) { currentHealth -= (dmg > currentHealth ? currentHealth : dmg); return dmg; }
 
     /* Set & Get function*/

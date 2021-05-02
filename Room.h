@@ -20,7 +20,7 @@ public:
         isVisited = iVt; isExit = iEt; index = idx; 
         object = obj;
     }
-    ~Room() {}
+    ~Room() { popObject(); }
     
     /*pop out the specific object, used when the interaction is done*/
     void popObject() { delete object; object = nullptr; } 
